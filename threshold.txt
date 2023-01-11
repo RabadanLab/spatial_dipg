@@ -1,0 +1,17 @@
+cell_str	Ab	stat	thres	col
+Nucleus	CD163	mean	350	Nucleus..CD163.mean
+Nucleus	CD20	mean	1000	Nucleus..CD20.mean
+Nucleus	CD3	mean	845.813350340136	Nucleus..CD3.mean
+Cell	CD31	mean	300	Cell..CD31.mean
+Nucleus	CD34	mean	1867.84939572624	Nucleus..CD34.mean
+Nucleus	CD4	mean	200	Nucleus..CD4.mean
+Nucleus	CD45	mean	364.25019979137	Nucleus..CD45.mean
+Nucleus	CD68	mean	265.316990858843	Nucleus..CD68.mean
+Nucleus	CD8	mean	528.5746	Nucleus..CD8.mean
+Cell	GFAP	mean	5000	Cell..GFAP.mean
+Nucleus	H3K27M	mean	4760.84571641157	Nucleus..H3K27M.mean
+Nucleus	KI67	mean	585.013271684108	Nucleus..KI67.mean
+Nucleus	PD1	mean	420.253436188766	Nucleus..PD1.mean
+Nucleus	PERK	mean	517.218348312131	Nucleus..PERK.mean
+Cell	VEGFR2	mean	1500	Cell..VEGFR2.mean
+Nucleus	VIMENTIN	mean	633.795276722027	Nucleus..VIMENTIN.mean
