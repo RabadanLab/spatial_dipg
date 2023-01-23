@@ -1,0 +1,147 @@
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(spatstat)
+```
+
+
+
+
+#Hanna's cleaning code - 272
+```{r}
+
+for(m in 1:length(df_list_272filt)){
+  df = as.data.frame(df_list_272filt[m])
+  binary = df[1:14]
+  for(i in 1:17){
+    for(j in 1:nrow(df)){
+      if(df[j, i+14] >= Threshold_list[[i]]){
+        binary[j,i+14] <- 1
+      }else{
+        binary[j,i+14] <- 0
+      }
+    }
+  }
+colnames(binary) = c('Image', 'Name', 'Class', 'TMA.core', 'Parent', 'ROI', 'X', 'Y', 'Nucleus_Area', 'Nucleus_Perimeter', 'Nucleus_Circularity', 
+                       'Nucleus_Max_caliper', 'Nucleus_Min_caliper', 'Nucleus_Eccentricity', 'CD3', 'CD4', 'CD8','CD20','CD31',
+                       'CD34','CD45', 'CD68','CD163','GFAP','H3K27M','KI67','PD1','PERK',
+                       'VEGFR2','VIMENTIN','DAPI')
+  #write.csv(binary, paste0(LETTERS[m][[1]], "_272_binary.csv"), quote = F)
+  assign(paste0(LETTERS[m][[1]], "_272_binary"), binary)
+}
+
+
+```
+
+```{r}
+#Merge binary files by TMA and then 272+273 combined
+df_list_272binary = list(A_272_binary, B_272_binary, C_272_binary, D_272_binary, E_272_binary, F_272_binary, G_272_binary, H_272_binary, I_272_binary, J_272_binary, K_272_binary, L_272_binary, M_272_binary, N_272_binary, O_272_binary, P_272_binary, Q_272_binary)
+
+BINARY_272_MERGED = bind_rows(df_list_272binary, .id = NULL)
+nrow(BINARY_272_MERGED) == nrow(TMA_272_Dec2022)
+
+# CREATE UNIQUE ID
+BINARY_272_MERGED$UniqueID = paste0("272_",BINARY_272_MERGED$TMA.core)
+#write.csv(BINARY_272_MERGED, paste0(path8,"MERGED_272_binary.csv"), quote = F)
+```
+
+
+#Hanna's cleaning code - 273
+```{r}
+
+for(m in 1:length(df_list_273filt)){
+  df = as.data.frame(df_list_273filt[m])
+  binary = df[1:14]
+  for(i in 1:17){
+    for(j in 1:nrow(df)){
+      if(df[j, i+14] >= Threshold_list[[i]]){
+        binary[j,i+14] <- 1
+      }else{
+        binary[j,i+14] <- 0
+      }
+    }
+  }
+  colnames(binary) = c('Image', 'Name', 'Class', 'TMA.core', 'Parent', 'ROI', 'X', 'Y', 'Nucleus_Area', 'Nucleus_Perimeter', 'Nucleus_Circularity', 'Nucleus_Max_caliper', 'Nucleus_Min_caliper', 'Nucleus_Eccentricity', 'CD3','CD4', 'CD8','CD20','CD31', 'CD34','CD45', 'CD68','CD163','GFAP','H3K27M','KI67','PD1','PERK', 'VEGFR2','VIMENTIN','DAPI')
+ #write.csv(binary, paste0(LETTERS[m][[1]], "_273_binary.csv"), quote = F)
+  assign(paste0(LETTERS[m][[1]], "_273_binary"), binary)
+  
+}
+
+
+```
+
+
+```{r}
+#Merge binary files by TMA and then 272+273 combined
+df_list_273binary = list(A_273_binary, B_273_binary, C_273_binary, D_273_binary, E_273_binary, F_273_binary, G_273_binary, H_273_binary, I_273_binary, J_273_binary, K_273_binary, L_273_binary, M_273_binary, N_273_binary, O_273_binary, P_273_binary, Q_273_binary)
+
+BINARY_273_MERGED = bind_rows(df_list_273binary, .id = NULL)
+nrow(BINARY_273_MERGED) == nrow(TMA_273_Dec2022)
+
+# CREATE UNIQUE ID
+BINARY_273_MERGED$UniqueID = paste0("273_",BINARY_273_MERGED$TMA.core)
+```
+
+
+```{r}
+#Merge both 272 and 273 into complete binary file
+DIPG_MERGED = bind_rows(BINARY_272_MERGED, BINARY_273_MERGED, .id = NULL)
+```
+
+
+
+
+```{r}
+
+metadata_DIPG <- read_excel("/Users/agalianese/Documents/DIPG/1_TMA_Analysis_all_01-09-2022_HMannotated.xlsx")
+
+######################## CONCATINATION AND SUMMATION OF ANTIBODY POSITIVITY USING FILTERED DIPG DATASET #####################################################
+
+#Read in filtered metadata for:
+# DIPG diagnosis only
+# With confirmed either normal/tumor tissue classification (based on path columns - see metadata sheet)
+# Confirmed all columns of TX info
+# Result = 37 patients
+
+
+metadata_DIPG_TUMOR <- metadata_DIPG[which(metadata_DIPG$`Confirmed TUMOR (only if I is 1,2 or P AND J is T)` == 1), ]
+metadata_DIPG_NORMAL <- metadata_DIPG[which(metadata_DIPG$`Confirmed NORMAL (only if I is 0 or N AND J is N)` == 1), ]
+
+DIPG_MERGED_TUMOR <- DIPG_MERGED[which(DIPG_MERGED$UniqueID %in% metadata_DIPG_TUMOR$UniqueID),]
+# 207 spots
+DIPG_MERGED_NORMAL <- DIPG_MERGED[which(DIPG_MERGED$UniqueID %in% metadata_DIPG_NORMAL$UniqueID),]
+# 59 spots
+
+#Exclude antibodies that aren't ready for analyzing. Keep: CD3, CD8, CD31, CD34, CD163, H3K27M, KI67, VIMENTIN
+DIPG_MERGED_TUMOR = DIPG_MERGED_TUMOR[, -c(16,18,21,22,24,27,28,29)]
+DIPG_MERGED_NORMAL = DIPG_MERGED_NORMAL[, -c(16,18,21,22,24,27,28,29)]
+
+## Writing for processing just the tumor samples below, but can do with normal as well 
+
+#Concatenate cell codes
+DIPG_MERGED_TUMOR <- DIPG_MERGED_TUMOR %>% tidyr::unite(cellcode, CD3:VIMENTIN, sep = "_", remove = F)
+length(unique(DIPG_MERGED_TUMOR$cellcode))
+#With exclusion of Abs = 138
+
+#Assess the number of each unique cell code
+df_tumor <- DIPG_MERGED_TUMOR %>% 
+  count(cellcode)
+df_tumor <- df_tumor[order(df_tumor$n, decreasing =  TRUE),]
+
+#In excel, I deconvoluted the cell code into antibody stain based on column location
+cellcode_concat_tumor <- read.xlsx(paste0("DIPG_TUMOR_CELLCODE_CONCAT_01-04-2023.xlsx"), sheet=1)
+#e.g. 
+
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
