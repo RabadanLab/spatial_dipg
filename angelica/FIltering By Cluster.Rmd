@@ -1,0 +1,187 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+library(spatstat)
+
+TMA_272 <- readRDS("~/DIPG/01-2023/TMA_272.RData")
+```
+
+
+```{r}
+
+TMA_272 <- as.data.frame(TMA_272_Dec2022)
+
+for (i in 1:length(TMA_272$Name)) {
+  TMA_272$Group[i] <- strsplit(TMA_272$`TMA core`[i], "-")[[1]][1]
+  if (i %% 20000 == 0) { print(i) } 
+}
+
+
+saveRDS(TMA_272, file = "~/DIPG/01-2023/TMA_272.RData")
+
+```
+
+#272 Groups A-Q
+```{r}
+
+A_272 <- TMA_272 %>%
+  filter(Group=="A")
+
+B_272 <- TMA_272 %>%
+  filter(Group=="B")
+
+C_272 <- TMA_272 %>%
+  filter(Group=="C")
+
+D_272 <- TMA_272 %>%
+  filter(Group=="D")
+
+E_272 <- TMA_272 %>%
+  filter(Group=="E")
+
+F_272 <- TMA_272 %>%
+  filter(Group=="F")
+
+G_272 <- TMA_272 %>%
+  filter(Group=="G")
+
+H_272 <- TMA_272 %>%
+  filter(Group=="H")
+
+I_272 <- TMA_272 %>%
+  filter(Group=="I")
+
+J_272 <- TMA_272 %>%
+  filter(Group=="J")
+
+K_272 <- TMA_272 %>%
+  filter(Group=="K")
+
+L_272 <- TMA_272 %>%
+  filter(Group=="L")
+
+M_272 <- TMA_272 %>%
+  filter(Group=="M")
+
+N_272 <- TMA_272 %>%
+  filter(Group=="N")
+
+O_272 <- TMA_272 %>%
+  filter(Group=="O")
+
+P_272 <- TMA_272 %>%
+  filter(Group=="P")
+
+Q_272 <- TMA_272 %>%
+  filter(Group=="Q")
+```
+
+```{r}
+
+TMA_273 <- as.data.frame(TMA_273_Dec2022)
+
+for (i in 1:length(TMA_273$Name)) {
+  TMA_273$Group[i] <- strsplit(TMA_273$`TMA core`[i], "-")[[1]][1]
+  if (i %% 20000 == 0) { print(i /length(TMA_273$Name))}
+}
+
+# sapply(seq_along(1:length(TMA_273$Name)), addGroup)
+table(TMA_273$Group)
+
+save(TMA_273, file = "~/DIPG/01-2023/TMA_273.RData")
+
+```
+
+#273 Groups A-Q
+```{r}
+
+A_273 <- TMA_273 %>%
+  filter(Group=="A")
+
+B_273 <- TMA_273 %>%
+  filter(Group=="B")
+
+C_273 <- TMA_273 %>%
+  filter(Group=="C")
+
+D_273 <- TMA_273 %>%
+  filter(Group=="D")
+
+E_273 <- TMA_273 %>%
+  filter(Group=="E")
+
+F_273 <- TMA_273 %>%
+  filter(Group=="F")
+
+G_273 <- TMA_273 %>%
+  filter(Group=="G")
+
+H_273 <- TMA_273 %>%
+  filter(Group=="H")
+
+I_273 <- TMA_273 %>%
+  filter(Group=="I")
+
+J_273 <- TMA_273 %>%
+  filter(Group=="J")
+
+K_273 <- TMA_273 %>%
+  filter(Group=="K")
+
+L_273 <- TMA_273 %>%
+  filter(Group=="L")
+
+M_273 <- TMA_273 %>%
+  filter(Group=="M")
+
+N_273 <- TMA_273 %>%
+  filter(Group=="N")
+
+O_273 <- TMA_273 %>%
+  filter(Group=="O")
+
+P_273 <- TMA_273 %>%
+  filter(Group=="P")
+
+Q_273 <- TMA_273 %>%
+  filter(Group=="Q")
+```
+
+```{r}
+
+df_list_272filt = list(A_272, B_272, C_272, D_272, E_272, F_272,
+                       G_272, H_272, I_272, J_272, K_272, L_272, M_272, 
+                       N_272, O_272, P_272, Q_272)
+
+```
+
+
+```{r}
+
+df_list_273filt = list(A_273, B_273, C_273, D_273, E_273, F_273,
+                       G_273, H_273, I_273, J_273, K_273, L_273, M_273, 
+                       N_273, O_273, P_273, Q_273)
+
+
+```
+
+
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+

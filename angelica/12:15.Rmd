@@ -1,0 +1,55 @@
+---
+title: "DA_12-14"
+output: html_document
+date: "2022-12-14"
+---
+
+#Libraries
+```{r setup, include=FALSE}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(ggpubr)
+```
+
+
+#load data
+```{r}
+binaryDF <- data.frame(read_delim("/Users/agalianese/Downloads/concat_transformed.txt"))
+
+#add in cluster information
+for (i in 1:length(binaryDF$name)) {
+  binaryDF$cluster[i] <- (strsplit(binaryDF$name[i], " - ")[[1]][1])
+}
+
+table(binaryDF$cluster)
+
+#add group info (A, B ...)
+for (i in 1:length(binaryDF$name)) {
+  binaryDF$group[i] <- (strsplit(binaryDF$cluster[i], "-")[[1]][1])
+}
+
+table(binaryDF$group)
+
+a_groupDF <- binaryDF %>%
+  filter(group=="A")
+```
+
+#Coordinates graph
+```{r}
+ggplot(data = binaryDF, aes(x = x, y = y, color=group)) + geom_point() + labs(title = "Graph Coordinates Grouped by TMA Core", x = "X Coordinate", y="Y Coordinate") + theme(plot.title.position = 'plot', plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+```
+```{r}
+ggplot(data = binaryDF, aes(x = x, y = y, color=group)) + geom_point() + labs(title = "Graph Coordinates Grouped by TMA Core", x = "X Coordinate", y="Y Coordinate") + theme(plot.title.position = 'plot', plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle=90))
+
+
+binaryDF
+
+summary(a_groupDF)
+```
+
+
+
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
