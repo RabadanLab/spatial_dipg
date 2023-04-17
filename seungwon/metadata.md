@@ -1,8 +1,10 @@
-##revising the metadata \
+##revising the metadata## \
 \
 [1] column 8,9,10
 ````sh
 for(i in 9:11){ annot[,i] <- ifelse(annot[,i] %!in% c("N", "Y"), NA, annot[,i])}
+````
+````sh
 colnames(annot)[c(2, 6:8)] <- c("spot", "path_TN", "path_H3K27M", "path_H7E")
 ````
 \
@@ -24,4 +26,8 @@ annot$location <- gsub(" ", "", tolower(annot$Location))
 ````sh
 annot$path_H7E <- ifelse(annot$path_H7E %in% c("CB", "?", "B") , NA, ifelse(annot$path_H7E %in% c("M"), "N+", annot$path_H7E))
 ````
+**revised metadata is uploaded as 'metadata_Apr-2023.txt'**
+
+##histologyg classification -Tumor vs. Normal##
+
 
